@@ -26,28 +26,20 @@ client.on('qr', async qr => {
 });
 
 client.on('ready', () => {
-    console.log('Client is ready!');
+    console.log('tudo pronto! =)');
     isConnected = true;
     qrCodeData = '';
     io.emit('connected');
 });
 
 client.on('message_create', async (message) => {
-    let replyMessage;
-    const idMessage = crypto.randomUUID();
-
-    if (message.body === '!ping') {
-        replyMessage = 'pong';
-        await message.reply(replyMessage);
-
-        try {
-            await axios.post(process.env.API_URL, {
-                id: idMessage,
-                message: replyMessage
-            });
-        } catch (error) {
-            console.error('Erro ao enviar para a API:', error.message);
-        }
+    if (message.body === 'hello') {
+        const idMessage = crypto.randomUUID();
+        const n8nResponse = await axios.post(process.env.API_URL, {
+            id: idMessage,
+            message: message.body
+        });
+        await message.reply(n8nResponse.data);
     }
 });
 
